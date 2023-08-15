@@ -134,7 +134,7 @@ with gr.Blocks(theme='gradio/monochrome') as demo:
     with gr.Row():
         imageInput = gr.Image(type='filepath')
         textboxInput = gr.Textbox(placeholder="Enter text here...")
-    galleryOutput = gr.Gallery()
+    galleryOutput = gr.Gallery(object_fit='cover', columns = 5)
     btn = gr.Button("Search")
     btn.click(fn = compute_similarity, inputs = [textboxInput, imageInput], outputs = galleryOutput)
     

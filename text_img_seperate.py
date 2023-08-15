@@ -21,15 +21,15 @@ import plotly.express as px
 import plotly.graph_objects as go
 from sklearn.preprocessing import MinMaxScaler
 
-num_samples = 10000
+# num_samples = 10000
 
 datapath = "/home/azureuser/val2017"
 annpath = "/home/azureuser/annotations/instances_val2017.json"
 
 coco = COCO(annpath)
 #Change amount of samples here
-annotations = coco.loadAnns(sample(coco.getAnnIds(), num_samples))
-# annotations = coco.loadAnns(coco.getAnnIds())
+# annotations = coco.loadAnns(sample(coco.getAnnIds(), num_samples))
+annotations = coco.loadAnns(coco.getAnnIds())
 # Get category IDs and names
 category_ids = coco.getCatIds()
 categories = coco.loadCats(category_ids)
@@ -151,10 +151,10 @@ if not os.path.exists('/home/azureuser/ImageBind/class_embeddings.pkl'):
 
     # print(embeddings_classes)
     print("Done getting text embeddings")
-    with open('/home/azureuser/ImageBind/class_embeddings.pkl', 'wb') as f:
+    with open('class_embeddings.pkl', 'wb') as f:
         pickle.dump(embeddings_classes, f)
 else:
-    with open('/home/azureuser/ImageBind/class_embeddings.pkl', 'rb') as f:
+    with open('class_embeddings.pkl', 'rb') as f:
         embeddings_classes = pickle.load(f)
 
 # print(embeddings_classes)
@@ -217,15 +217,15 @@ for category, embeddings_list in image_embeddings.items():
 image_embeddings_final = torch.stack(image_embeddings_final, dim = 0)
 text_embeddings_final = torch.stack(text_embeddings_final, dim = 0)
 
-tsne_text = TSNE(n_components=1).fit_transform(text_embeddings_final.cpu().numpy())
+tsne_text = TSNE(n_components=2).fit_transform(text_embeddings_final.cpu().numpy())
 scaler_text = MinMaxScaler()
 tsne_text_scaled = scaler_text.fit_transform(tsne_text)
 
-tsne_image = TSNE(n_components=1).fit_transform(image_embeddings_final.cpu().numpy())
+tsne_image = TSNE(n_components=2).fit_transform(image_embeddings_final.cpu().numpy())
 scaler_image = MinMaxScaler()
 tsne_image_scaled = scaler_image.fit_transform(tsne_image)
 app = dash.Dash(__name__)
-
+print(tsne_image_scaled.shape)
 app.layout = html.Div([
     html.H1("IMAGEBIND - COCO Classes Visualization"),
     dcc.Graph(
@@ -234,25 +234,27 @@ app.layout = html.Div([
             'data': [
                 # Trace for text embeddings
                 go.Scatter(
-                    x=category_list,
-                    y=tsne_text_scaled.flatten(),
-                    mode='markers',
+                    x=tsne_text_scaled[:, 0],
+                    y=tsne_text_scaled[:, 1],
+                    mode='markers+text',
                     name='Text Embeddings',
+                    text=category_list,
                     marker=dict(size=8),
                 ),
                 # Trace for image embeddings
                 go.Scatter(
-                    x=category_list,
-                    y=tsne_image_scaled.flatten(),
-                    mode='markers',
+                    x=tsne_image_scaled[:, 0],
+                    y=tsne_image_scaled[:, 1],
+                    mode='markers+text',
                     name='Image Embeddings',
+                    text=category_list,
                     marker=dict(size=8),
                 ),
             ],
             'layout': {
                 'title': 'Overlay of Text and Image Embeddings',
-                'xaxis': {'title': 'Category'},
-                'yaxis': {'title': 'Scaled t-SNE'},
+                'xaxis': {'title': 't-SNE Component 1'},
+                'yaxis': {'title': 't-SNE Component 2'},
                 'showlegend': True
             }
         }
