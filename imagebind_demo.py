@@ -13,8 +13,8 @@ import gradio as gr
 
 
 # Paths
-datapath = "/home/azureuser/val2017"
-annpath = "/home/azureuser/annotations/instances_val2017.json"
+datapath = "/home/azureuser/data/val2017"
+annpath = "/home/azureuser/data/annotations/instances_val2017.json"
 
 # COCO Dataset
 coco = COCO(annpath)
@@ -84,58 +84,48 @@ else:
 
 image_embeddings = image_embeddings.to(device)
 
-def compute_similarity(textbox, image):
-    if len(textbox) != 0 and image is not None:
-        inputs = {
-            ModalityType.TEXT: data.load_and_transform_text([textbox], device),
-            ModalityType.VISION: data.load_and_transform_vision_data([image], device)
-        } 
-        with torch.no_grad():
-            embeddings = model(inputs)
-        embeddings[ModalityType.TEXT] /= torch.norm(embeddings[ModalityType.TEXT], dim=-1, keepdim=True)
-        embeddings[ModalityType.VISION] /= torch.norm(embeddings[ModalityType.VISION], dim=-1, keepdim=True)
+def compute_similarity(textbox, image, audio):
+    inputs = {}
+    truthList = []
+    if len(textbox) != 0:
+        inputs[ModalityType.TEXT] = data.load_and_transform_text([textbox], device)
+    if image is not None:
+        inputs[ModalityType.VISION] = data.load_and_transform_vision_data([image], device)
+    if audio is not None:
+        inputs[ModalityType.AUDIO] = data.load_and_transform_audio_data([audio], device)
+    with torch.no_grad():
+        embeddings = model(inputs)
+    similarities = []
+    for modality in embeddings.keys():
+        embeddings[modality] /= torch.norm(embeddings[modality], dim=-1, keepdim=True)
+        similarities.append(embeddings[modality] @ image_embeddings.T)
+    similarity = torch.mean(torch.stack(similarities), dim=0)
+    index_results = torch.topk(similarity, 30, dim=1)    
+    path_results = [image_paths[index] for _, index in enumerate(index_results.indices[0])]
+    return path_results
 
-        similarity_text = embeddings[ModalityType.TEXT] @ image_embeddings.T
-        similarity_vision = embeddings[ModalityType.VISION] @ image_embeddings.T
+customCSS = """
+.grid-container.svelte-1b19cri.svelte-1b19cri {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
 
-        similarity_total = torch.add(similarity_text, similarity_vision)
-        similarity_total /= 2
+.thumbnail-lg.svelte-1b19cri.svelte-1b19cri{
+    width: unset;
+    height: 35vh;
+    aspect-ratio: auto;
+}
+"""
 
-        index_results = torch.topk(similarity_total, 10, dim=1)    
-        path_results = [image_paths[index] for _, index in enumerate(index_results.indices[0])]
-        return path_results
-    elif len(textbox) != 0:
-        inputs = {
-            ModalityType.TEXT: data.load_and_transform_text([textbox], device),
-        }
-        with torch.no_grad():
-            embeddings = model(inputs)
-        embeddings[ModalityType.TEXT] /= torch.norm(embeddings[ModalityType.TEXT], dim=-1, keepdim=True)
-        similarity = embeddings[ModalityType.TEXT] @ image_embeddings.T
-
-        index_results = torch.topk(similarity, 10, dim=1)    
-        path_results = [image_paths[index] for _, index in enumerate(index_results.indices[0])]
-        return path_results
-    elif image is not None:
-        inputs = {
-            ModalityType.VISION: data.load_and_transform_vision_data([image], device),
-        }
-        with torch.no_grad():
-            embeddings = model(inputs)
-        embeddings[ModalityType.VISION] /= torch.norm(embeddings[ModalityType.VISION], dim=-1, keepdim=True)
-        similarity = embeddings[ModalityType.VISION] @ image_embeddings.T
-
-        index_results = torch.topk(similarity, 10, dim=1)    
-        path_results = [image_paths[index] for _, index in enumerate(index_results.indices[0])]
-        return path_results
-
-with gr.Blocks(theme='gradio/monochrome') as demo:
-    gr.Markdown("## Enter text and/or image input!")
+with gr.Blocks(theme='gradio/monochrome', css=customCSS) as demo:
+    gr.Markdown("## Enter a combination of image, text, and audio input!")
     with gr.Row():
         imageInput = gr.Image(type='filepath')
         textboxInput = gr.Textbox(placeholder="Enter text here...")
-    galleryOutput = gr.Gallery(object_fit='cover', columns = 5)
+        audioInput = gr.Audio(type='filepath', label="Audio")
+    galleryOutput = gr.Gallery(label="Gallery")
     btn = gr.Button("Search")
-    btn.click(fn = compute_similarity, inputs = [textboxInput, imageInput], outputs = galleryOutput)
+    btn.click(fn = compute_similarity, inputs = [textboxInput, imageInput, audioInput], outputs = galleryOutput)
     
 demo.launch()
