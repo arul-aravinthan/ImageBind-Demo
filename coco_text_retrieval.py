@@ -8,11 +8,8 @@ from imagebind import data
 from imagebind.models.imagebind_model import ModalityType
 from imagebind.models import imagebind_model
 from tqdm import tqdm
+from utils.xdecoder_retrieval_evaluation import RetrievalEvaluator
 import pickle as pkl
-import gradio as gr
-
-os.environ["CUDA_VISIBLE_DEVICES"] = "3"
-
 
 # Paths
 datapath = "/home/azureuser/data/val2017"
@@ -48,7 +45,7 @@ if not os.path.exists('/home/azureuser/ImageBind-Demo/image_embeddings.pkl'):
             )
             with open(image_path, "rb") as fopen:
                 image = Image.open(fopen).convert("RGB")
-            
+
             image = data_transform(image).to(device)
             image_outputs.append(image)
         return torch.stack(image_outputs, dim=0)
@@ -85,49 +82,36 @@ else:
         image_embeddings = pkl.load(f)
 
 image_embeddings = image_embeddings.to(device)
+all_captions = []
+for image_id in coco.getImgIds():
+    annotations =  coco.loadAnns(coco.getAnnIds(imgIds=image_id))
+    captions = [annotation['caption'] for annotation in annotations]
+    all_captions.append(captions)
 
-def compute_similarity(textbox, image, audio):
-    inputs = {}
-    truthList = []
-    if len(textbox) != 0:
-        inputs[ModalityType.TEXT] = data.load_and_transform_text([textbox], device)
-    if image is not None:
-        inputs[ModalityType.VISION] = data.load_and_transform_vision_data([image], device)
-    if audio is not None:
-        inputs[ModalityType.AUDIO] = data.load_and_transform_audio_data([audio], device)
+dataloader = DataLoader(all_captions, batch_size=1, shuffle=False)
+all_embeddings_text = []
+for batch_captions in tqdm(dataloader, desc="Processing batches"):
+    inputs = {
+        ModalityType.TEXT: data.load_and_transform_text(batch_captions, device),
+    }
+    
     with torch.no_grad():
         embeddings = model(inputs)
-    similarities = []
-    for modality in embeddings.keys():
-        embeddings[modality] /= torch.norm(embeddings[modality], dim=-1, keepdim=True)
-        similarities.append(embeddings[modality] @ image_embeddings.T)
-    similarity = torch.mean(torch.stack(similarities), dim=0)
-    index_results = torch.topk(similarity, 30, dim=1)    
-    path_results = [image_paths[index] for _, index in enumerate(index_results.indices[0])]
-    return path_results
-
-customCSS = """
-.grid-container.svelte-1b19cri.svelte-1b19cri {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-
-.thumbnail-lg.svelte-1b19cri.svelte-1b19cri{
-    width: unset;
-    height: 35vh;
-    aspect-ratio: auto;
-}
-"""
-
-with gr.Blocks(theme='gradio/monochrome', css=customCSS) as demo:
-    gr.Markdown("## Enter a combination of image, text, and audio input!")
-    with gr.Row():
-        imageInput = gr.Image(type='filepath')
-        textboxInput = gr.Textbox(placeholder="Enter text here...")
-        audioInput = gr.Audio(type='filepath', label="Audio")
-    galleryOutput = gr.Gallery(label="Gallery")
-    btn = gr.Button("Search")
-    btn.click(fn = compute_similarity, inputs = [textboxInput, imageInput, audioInput], outputs = galleryOutput)
     
-demo.launch(share=True)
+    embeddings[ModalityType.TEXT] /= torch.norm(embeddings[ModalityType.TEXT], dim=-1, keepdim=True)
+    averaged_text = torch.mean(embeddings[ModalityType.TEXT], dim=0, keepdim=True)
+
+    all_embeddings_text.append(averaged_text)
+
+text_embeddings = torch.cat(all_embeddings_text, dim=0)
+
+similarity = torch.matmul(text_embeddings, image_embeddings.T)
+
+pkl.dump(similarity, open('/home/azureuser/ImageBind-Demo/similarity.pkl', 'wb'))
+
+diagonal_elements = torch.diagonal(similarity)
+count = 0
+for i in range(len(similarity)):
+    if torch.max(similarity[i]) == diagonal_elements[i]:
+        count += 1
+print(count, count/len(similarity))

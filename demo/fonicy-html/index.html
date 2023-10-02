@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <!-- Basic -->
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <!-- Mobile Metas -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <!-- Site Metas -->
+  <meta name="keywords" content="" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+
+  <title>Home</title>
+
+
+  <!-- bootstrap core css -->
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+
+  <!-- fonts style -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+  <!--owl slider stylesheet -->
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+
+  <!-- font awesome style -->
+  <link href="css/font-awesome.min.css" rel="stylesheet" />
+
+  <!-- Custom styles for this template -->
+  <link href="css/style.css" rel="stylesheet" />
+  <!-- responsive style -->
+  <link href="css/responsive.css" rel="stylesheet" />
+
+</head>
+
+<body>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container">
+    <a class="navbar-brand" href="#">Home</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="#about">Introduction</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#projects">Demo</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#testimonial">Examples</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  <div class="hero_area">
+  <!-- about section -->
+
+  <section id="about" class="about_section">
+    <div class="container  " style="margin-top: 10vh; margin: 0 auto;">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="detail-box">
+            <div class="heading_container">
+              <h2>
+                ImageBind
+              </h2>
+            </div>
+            <p>
+              Imagebind binds together six modalities: images, video, audio, text, depth, thermal, and IMU measurements. It binds these different modalities through the inherent alignments between each of them with images.
+              For example, videos pair images and audio, thermal data pairs images and temperature, and IMU data pairs images and motion. The model then freezes 
+          
+            </p>
+          </div>
+        </div>
+        <div class="col-md-6 ">
+            <img src="images/example4.png" alt="">
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- end about section -->
+
+
+
+  <!-- project section -->
+<section id="demo" class="demo_section layout_padding">
+  <iframe src="https://277b46c732473704ff.gradio.live" frameborder="0" width="100%%" height="1000" align></iframe>
+</section>
+
+  <!-- end project section -->
+<!-- Two image examples -->
+<section class="layout_padding" style="padding: 20px;">
+  <h2 style="text-align: center;">Examples</h2>
+  <div class="example-container" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-top: 20px;">
+    <div class="example" style="flex: 0 0 48%; text-align: center; margin-bottom: 20px;">
+      <img src="images/example1.png" alt="Example 1" style="max-width: 100%; height: auto; border: 1px solid #ccc;">
+    </div>
+    <div class="example" style="flex: 0 0 48%; text-align: center; margin-bottom: 20px;">
+      <img src="images/example2.png" alt="Example 2" style="max-width: 100%; height: auto; border: 1px solid #ccc;">
+    </div>
+  </div>
+</section>
+
+
+<section class="table_section layout_padding">
+  <div class="container">
+    <div class="heading_container heading_center">
+      <h2>
+        Image-text retrieval
+      </h2>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-bordered text-center">
+        <thead>
+          <tr>
+            <th></th>
+            <th>COCO</th>
+            <th>Flickr30k</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>R @ 1</td>
+            <td><img src="images/coco.jpg" alt="COCO" /></td>
+            <td><img src="images/flickr30k.jpg" alt="Flickr30k" /></td>
+          </tr>
+          <!-- Add more rows here if needed -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- Table Section - Image classification -->
+<section class="table_section layout_padding">
+  <div class="container">
+    <div class="heading_container heading_center">
+      <h2>
+        Image classification
+      </h2>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-bordered text-center">
+        <thead>
+          <tr>
+            <th></th>
+            <th>ImageNet-1k</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Top-1</td>
+            <td><img src="images/imagenet.jpg" alt="ImageNet" /></td>
+          </tr>
+          <!-- Add more rows here if needed -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- Table Section - Audio retrieval -->
+<section class="table_section layout_padding">
+  <div class="container">
+    <div class="heading_container heading_center">
+      <h2>
+        Audio retrieval
+      </h2>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-bordered text-center">
+        <thead>
+          <tr>
+            <th></th>
+            <th>AudioCaps</th>
+            <th>Clotho</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>R @ 1</td>
+            <td><img src="images/audiocaps.jpg" alt="AudioCaps" /></td>
+            <td>8.1%</td>
+          </tr>
+          <!-- Add more rows here if needed -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+  <!-- jQery -->
+  <script src="js/jquery-3.4.1.min.js"></script>
+  <!-- popper js -->
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+  </script>
+  <!-- bootstrap js -->
+  <script src="js/bootstrap.js"></script>
+  <!-- owl slider -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js">
+  </script>
+  <!--  OwlCarousel 2 - Filter -->
+  <script src="https://huynhhuynh.github.io/owlcarousel2-filter/dist/owlcarousel2-filter.min.js"></script>
+  <!-- custom js -->
+  <script src="js/custom.js"></script>
+  <!-- Google Map -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh39n5U-4IoWpsVGUHWdqB6puEkhRLdmI&callback=myMap">
+  </script>
+  <!-- End Google Map -->
+
+</body>
+
+</html>

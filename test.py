@@ -27,10 +27,10 @@ inputs = {
     ModalityType.VISION: data.load_and_transform_vision_data(image_paths, device),
     ModalityType.AUDIO: data.load_and_transform_audio_data(audio_paths, device),
 }
-print(inputs[ModalityType.VISION].shape)
 with torch.no_grad():
     embeddings = model(inputs)
 
+print(embeddings[ModalityType.VISION].shape, embeddings[ModalityType.TEXT].shape)
 print(
     "Vision x Text: ",
     embeddings[ModalityType.VISION] @ embeddings[ModalityType.TEXT].T,
