@@ -16,13 +16,12 @@ from pytorchvideo import transforms as pv_transforms
 from pytorchvideo.data.clip_sampling import ConstantClipsPerVideoSampler
 from pytorchvideo.data.encoded_video import EncodedVideo
 from torchvision import transforms
-from torchvision.transforms._transforms_video import NormalizeVideo
 
 from imagebind.models.multimodal_preprocessors import SimpleTokenizer
 
 DEFAULT_AUDIO_FRAME_SHIFT_MS = 10  # in milliseconds
 
-BPE_PATH = "bpe/bpe_simple_vocab_16e6.txt.gz"
+BPE_PATH = "imagebind/bpe/bpe_simple_vocab_16e6.txt.gz"
 
 
 def waveform2melspec(waveform, sample_rate, num_mel_bins, target_length):
@@ -296,7 +295,7 @@ def load_and_transform_video_data(
     video_transform = transforms.Compose(
         [
             pv_transforms.ShortSideScale(224),
-            NormalizeVideo(
+            pv_transforms.Normalize(
                 mean=(0.48145466, 0.4578275, 0.40821073),
                 std=(0.26862954, 0.26130258, 0.27577711),
             ),

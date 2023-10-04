@@ -490,17 +490,19 @@ def imagebind_huge(pretrained=False):
     )
 
     if pretrained:
-        if not os.path.exists(".checkpoints/imagebind_huge.pth"):
+        current_dir = os.getcwd()
+        os.chdir(os.path.dirname(os.path.abspath(__file__)))
+        if not os.path.exists("../checkpoints/imagebind_huge.pth"):
             print(
-                "Downloading imagebind weights to .checkpoints/imagebind_huge.pth ..."
+                "Downloading imagebind weights to imagebind/checkpoints/imagebind_huge.pth ..."
             )
-            os.makedirs(".checkpoints", exist_ok=True)
+            os.makedirs("../checkpoints", exist_ok=True)
             torch.hub.download_url_to_file(
                 "https://dl.fbaipublicfiles.com/imagebind/imagebind_huge.pth",
-                ".checkpoints/imagebind_huge.pth",
+                "../checkpoints/imagebind_huge.pth",
                 progress=True,
             )
 
-        model.load_state_dict(torch.load(".checkpoints/imagebind_huge.pth"))
-
+        model.load_state_dict(torch.load("../checkpoints/imagebind_huge.pth"))
+        os.chdir(current_dir)
     return model

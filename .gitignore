@@ -3,3 +3,5 @@
 .DS_Store
 .checkpoints
 *.pkl
+data
+imagebind/checkpoints/
