@@ -49,10 +49,13 @@
           <a class="nav-link" href="#about">Introduction</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#projects">Demo</a>
+          <a class="nav-link" href="#demo">Demo</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#testimonial">Examples</a>
+          <a class="nav-link" href="#examples">Examples</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#results">Results</a>
         </li>
       </ul>
     </div>
@@ -98,7 +101,7 @@
 
   <!-- end project section -->
 <!-- Two image examples -->
-<section class="layout_padding" style="padding: 20px;">
+<section id="examples" class="layout_padding" style="padding: 20px;">
   <h2 style="text-align: center;">Examples</h2>
   <div class="example-container" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-top: 20px;">
     <div class="example" style="flex: 0 0 48%; text-align: center; margin-bottom: 20px;">
@@ -111,28 +114,59 @@
 </section>
 
 
-<section class="table_section layout_padding">
+<section id="results" class="table_section layout_padding" style="margin-bottom: -15vh;">
   <div class="container">
     <div class="heading_container heading_center">
       <h2>
-        Image-text retrieval
+        COCO Image + Text Retrieval
       </h2>
     </div>
     <div class="table-responsive">
       <table class="table table-bordered text-center">
         <thead>
           <tr>
+            <!-- <th></th> -->
             <th></th>
-            <th>COCO</th>
-            <th>Flickr30k</th>
+            <th>Image Retrieval</th>
+            <th>Text Retrieval</th>
           </tr>
         </thead>
         <tbody>
           <tr>
+            <!-- <td rowspan="3"><b>Reproduced results</b></td> -->
             <td>R @ 1</td>
-            <td><img src="images/coco.jpg" alt="COCO" /></td>
-            <td><img src="images/flickr30k.jpg" alt="Flickr30k" /></td>
+            <td>49.41</td>
+            <td>65.92</td>
           </tr>
+          <tr>
+            <td>R @ 5</td>
+            <td>73.29</td>
+            <td>86.14</td>
+          </tr>  
+          <tr>
+            <td>R @ 10</td>
+            <td>81.54</td>
+            <td>91.74</td>
+          </tr>
+          <!-- Add more rows here if needed -->
+        </tbody>
+        <tbody>
+          <!-- <tr>
+            <td rowspan="3"><b>Imagebind Paper Results</b></td>
+            <td>R @ 1</td>
+            <td>49.41</td>
+            <td>65.92</td>
+          </tr>
+          <tr>
+            <td>R @ 5</td>
+            <td>73.29</td>
+            <td>86.14</td>
+          </tr>  
+          <tr>
+            <td>R @ 10</td>
+            <td>81.54</td>
+            <td>91.74</td>
+          </tr> -->
           <!-- Add more rows here if needed -->
         </tbody>
       </table>
@@ -141,11 +175,11 @@
 </section>
 
 <!-- Table Section - Image classification -->
-<section class="table_section layout_padding">
+<section class="table_section layout_padding" style="margin-bottom: -15vh;">
   <div class="container">
     <div class="heading_container heading_center">
       <h2>
-        Image classification
+        ImageNet classification
       </h2>
     </div>
     <div class="table-responsive">
@@ -153,13 +187,21 @@
         <thead>
           <tr>
             <th></th>
-            <th>ImageNet-1k</th>
+            <th>Image Classification</th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td>Top-1</td>
-            <td><img src="images/imagenet.jpg" alt="ImageNet" /></td>
+            <td>77.83</td>
+          </tr>
+          <tr>
+            <td>Top-5</td>
+            <td>95.19</td>
+          </tr>
+          <tr>
+            <td>Top-10</td>
+            <td>97.40</td>
           </tr>
           <!-- Add more rows here if needed -->
         </tbody>
@@ -173,7 +215,7 @@
   <div class="container">
     <div class="heading_container heading_center">
       <h2>
-        Audio retrieval
+        Clotho Audio + Text Retrieval
       </h2>
     </div>
     <div class="table-responsive">
@@ -181,15 +223,25 @@
         <thead>
           <tr>
             <th></th>
-            <th>AudioCaps</th>
-            <th>Clotho</th>
+            <th>Audio Retrieval</th>
+            <th>Text Retrieval</th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td>R @ 1</td>
-            <td><img src="images/audiocaps.jpg" alt="AudioCaps" /></td>
-            <td>8.1%</td>
+            <td>6.24</td>
+            <td>7.46</td>
+          </tr>
+          <tr>
+            <td>R @ 5</td>
+            <td>19.06</td>
+            <td>17.99</td>
+          </tr>
+          <tr>
+            <td>R @ 10</td>
+            <td>28.25</td>
+            <td>27.56</td>
           </tr>
           <!-- Add more rows here if needed -->
         </tbody>

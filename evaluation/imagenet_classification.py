@@ -19,7 +19,7 @@ from utils import imagenet_classes
 imagenet_templates = imagenet_templates.imagenet_templates
 imagenet_classes = imagenet_classes.imagenet_classes
 
-datapath = "/home/azureuser/data/ImageNet"
+datapath = "data/ImageNet"
 
 data_transform = transforms.Compose(
     [
@@ -74,7 +74,7 @@ def accuracy(output, target, topk=(1,)):
     correct = pred.eq(target.view(1, -1).expand_as(pred))
     return [float(correct[:k].reshape(-1).float().sum(0, keepdim=True).cpu().numpy()) for k in topk]
 
-top1, top5, n = 0., 0., 0.
+top1, top5, top10, n = 0., 0., 0., 0.
 for images, target in tqdm(loader):
     images = images.to(device)
     target = target.to(device)
@@ -88,13 +88,17 @@ for images, target in tqdm(loader):
     image_embeddings /= image_embeddings.norm(dim=-1, keepdim=True)
 
     logits = 100. * image_embeddings @ zeroshot_weights
-    acc1, acc5 = accuracy(logits, target, topk=(1, 5))
+    acc1, acc5, acc10 = accuracy(logits, target, topk=(1, 5, 10))
     top1 += acc1
     top5 += acc5
+    top10 += acc10
+
     n += images.size(0)   
 
 top1 = (top1 / n) * 100
 top5 = (top5 / n) * 100
+top10 = (top10 / n) * 100
 
 print(f"Top-1 accuracy: {top1:.2f}")
 print(f"Top-5 accuracy: {top5:.2f}")
+print(f"Top-10 accuracy: {top10:.2f}")

@@ -17,11 +17,16 @@ import numpy as np
 import os 
 import pdb
 
-datapath = "/home/azureuser/data/coco_caption_karpathy_test.arrow"
+cur_dir = os.getcwd()
+
+
+datapath = "data/coco_caption_karpathy_test.arrow"
 
 # extract image/text from arrow file
 with pa.ipc.open_file(datapath) as reader:
     table = reader.read_all()
+
+os.chdir(cur_dir)
 
 table = table.to_pydict()
 
@@ -103,6 +108,7 @@ for images, texts in tqdm(dataloader):
                 'image_ids': [i],
             }
         results = {'caption': caption_results}
+        # print(results['caption']['image_embeds'].shape, results['caption']['text_embeds'].shape, results['caption']['caption_ids'], results['caption']['image_ids'])
         processed_results.append(results)
 
         evaluator.process(None, processed_results)

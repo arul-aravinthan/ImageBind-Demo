@@ -28,7 +28,7 @@ inputs = {
 with torch.no_grad():
     embeddings = model(inputs)
 
-print(embeddings[ModalityType.VISION].shape, embeddings[ModalityType.TEXT].shape)
+print(embeddings[ModalityType.VISION].shape, embeddings[ModalityType.TEXT].shape, embeddings[ModalityType.AUDIO].shape)
 print(
     "Vision x Text: ",
     embeddings[ModalityType.VISION] @ embeddings[ModalityType.TEXT].T,

@@ -1,4 +1,7 @@
 import os
+import sys
+pth = '/'.join(sys.path[0].split('/')[:-1])
+sys.path.insert(0, pth)
 import torch
 from torch.utils.data import DataLoader
 from torchvision import transforms
